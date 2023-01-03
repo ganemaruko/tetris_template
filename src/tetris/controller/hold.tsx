@@ -1,18 +1,17 @@
 import { BlockName, EntityBlockName } from "tetris/core/block";
 import { Field, PlayerPosition } from "tetris/core/type";
+import { gameSlice, GameSliceType } from "tetris/store/field";
+import { popNext } from "./generate";
 
 export const hold = (
-  field: Field,
-  playerPosition: PlayerPosition,
-  currentHold: BlockName,
-  nextHold: EntityBlockName,
-
+    gameData: GameSliceType
 ) => {
-    if(currentHold === "empty"){
-        
-
+    if(gameData.hold === "empty"){
+        gameData.hold = gameData.currentBlock
+        popNext(gameData);   
     }
     else{
+
 
     }
 };
