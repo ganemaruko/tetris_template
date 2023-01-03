@@ -1,6 +1,8 @@
 
 import { createReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { popNext } from 'tetris/controller/generate';
 import { moveDown, moveLeft, moveRight } from 'tetris/controller/move';
+import { BlockName, generateBlockSet, EntityBlockName } from 'tetris/core/block';
 import { GAME_SETTING } from 'tetris/core/setting';
 import { Field, PlayerPosition } from 'tetris/core/type';
 
@@ -8,6 +10,8 @@ import { Field, PlayerPosition } from 'tetris/core/type';
 export type GameSliceType = {
   field: Field;
   playerPosition: PlayerPosition;
+  blocks: EntityBlockName[],
+
 };
 
 /**
@@ -55,6 +59,7 @@ export const gameSlice = createSlice({
       [5, 2],
       [5, 3],
     ],
+    blocks: generateBlockSet(),
   } as GameSliceType,
   reducers: {
     createBlock: (state, action: PayloadAction<CreateBlock>) => {
@@ -73,7 +78,10 @@ export const gameSlice = createSlice({
     moveDownReducer: (state, action: PayloadAction<MoveAction>) => {
       moveDown(state.field, state.playerPosition);
     },
+    popNextReducer: (state, action: PayloadAction<MoveAction>) => {
+      popNext(state.field, state.playerPosition, state.blocks);
+    },
   },
 });
 
-export const {createBlock, deleteBlock, moveLeftReducer, moveRightReducer, moveDownReducer} = gameSlice.actions
+export const {createBlock, deleteBlock, moveLeftReducer, moveRightReducer, moveDownReducer, popNextReducer} = gameSlice.actions

@@ -44,13 +44,11 @@ const moveCore = (
       playerPosition.forEach((pos) => {
         const x = pos[0];
         const y = pos[1];
-        console.log(x, y);
         field[x][y] = BLOCK_NAME_TO_ID["empty"];
       });
       nextPlayerPosition.forEach((pos) => {
         const x = pos[0];
         const y = pos[1];
-        console.log(x, y);
         field[x][y] = 3;
       });
 

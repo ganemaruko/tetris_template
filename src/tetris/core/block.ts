@@ -1,8 +1,12 @@
 import {rgba} from "polished"
+import { shuffleByFisherYates } from "./util"
 
 type ID = number
 export const BLOCKS = ["empty", "o" , "s" , "t" , "z" , "l" , "j" , "i"] as const
+export const ENTITY_BLOCKS = ["o" , "s" , "t" , "z" , "l" , "j" , "i"] as const
 export type BlockName = typeof BLOCKS[number]
+export type EntityBlockName = typeof ENTITY_BLOCKS[number]
+
 export type BlockInfo = {
     color: string
 }
@@ -83,3 +87,8 @@ export class Block{
 export const isBlock = (key:string):  key is BlockName => {
     return key in BLOCKS;
 }
+
+
+export const generateBlockSet = (): EntityBlockName[] => {
+  return shuffleByFisherYates(ENTITY_BLOCKS);
+};
