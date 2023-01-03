@@ -1,13 +1,15 @@
-import { BLOCK_NAME_TO_ID } from "tetris/core/block";
+import { Block, BLOCK_NAME_TO_ID, EntityBlockName } from "tetris/core/block";
 import { Field, PlayerPosition, Position } from "tetris/core/type"
+import { GameSliceType } from "tetris/store/field";
+import { popNext } from "./generate";
 
 const moveRightImpl = (pos:Position):Position => {
     const newPos = [...pos] as Position
     newPos[0] += 1;
     return newPos;
 }
-export const moveRight = (field:Field, playerPosition:PlayerPosition) => {
-    moveCore(field, playerPosition, moveRightImpl)
+export const moveRight = (field:Field, playerPosition:PlayerPosition, playerBlock:EntityBlockName) => {
+    moveCore(field, playerPosition, playerBlock, moveRightImpl)
 }
 
 const moveLeftImpl = (pos:Position):Position => {
@@ -15,9 +17,8 @@ const moveLeftImpl = (pos:Position):Position => {
     newPos[0] -= 1;
     return newPos;
 }
-export const moveLeft = (field:Field, playerPosition:PlayerPosition) => {
-    moveCore(field, playerPosition, moveLeftImpl)
-
+export const moveLeft = (field:Field, playerPosition:PlayerPosition, playerBlock:EntityBlockName) => {
+    moveCore(field, playerPosition, playerBlock, moveLeftImpl)
 }
 
 const moveDownImpl = (pos:Position):Position => {
@@ -25,9 +26,19 @@ const moveDownImpl = (pos:Position):Position => {
     newPos[1] += 1;
     return newPos;
 }
-export const moveDown = (field:Field, playerPosition:PlayerPosition) => {
-    moveCore(field, playerPosition, moveDownImpl)
-}
+export const moveDown = (gameData: GameSliceType) => {
+  if (gameData.currentBlock !== "empty") {
+    const hasMoved = moveCore(
+      gameData.field,
+      gameData.playerPosition,
+      gameData.currentBlock,
+      moveDownImpl
+    );
+    if(!hasMoved){
+        popNext(gameData);
+    }
+  }
+};
 
 
 const copyPosition = (pos:Position):Position => {
@@ -37,8 +48,10 @@ const copyPosition = (pos:Position):Position => {
 const moveCore = (
   field: Field,
   playerPosition: PlayerPosition,
+  playerBlock: EntityBlockName,
   move: (pos: Position) => Position
-) => {
+): boolean => {
+    const block = new Block(undefined, playerBlock)
     const nextPlayerPosition = playerPosition.map(move);
     if (canMove(field, playerPosition.map(copyPosition), nextPlayerPosition)) {
       playerPosition.forEach((pos) => {
@@ -49,12 +62,17 @@ const moveCore = (
       nextPlayerPosition.forEach((pos) => {
         const x = pos[0];
         const y = pos[1];
-        field[x][y] = 3;
+        field[x][y] = block.id;
       });
 
       playerPosition.map((pos, i) => {
         playerPosition[i] = move(pos);
       });
+
+      return true
+    }
+    else{
+        return false;
     }
 };
 

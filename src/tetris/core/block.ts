@@ -1,4 +1,5 @@
 import {rgba} from "polished"
+import { Position } from "./type"
 import { shuffleByFisherYates } from "./util"
 
 type ID = number
@@ -91,4 +92,65 @@ export const isBlock = (key:string):  key is BlockName => {
 
 export const generateBlockSet = (): EntityBlockName[] => {
   return shuffleByFisherYates(ENTITY_BLOCKS);
+};
+
+export const generateBlockPositions = (
+  blockName: BlockName,
+  xCenter: number,
+  yCenter: number
+): Position[] => {
+  switch (blockName) {
+    case "i":
+      return [
+        [xCenter, yCenter],
+        [xCenter, yCenter + 1],
+        [xCenter, yCenter + 2],
+        [xCenter, yCenter + 3],
+      ];
+    case "j":
+      return [
+        [xCenter, yCenter],
+        [xCenter, yCenter + 1],
+        [xCenter, yCenter + 2],
+        [xCenter - 1, yCenter + 2],
+      ];
+    case "l":
+      return [
+        [xCenter, yCenter],
+        [xCenter, yCenter + 1],
+        [xCenter, yCenter + 2],
+        [xCenter + 1, yCenter + 2],
+      ];
+    case "o":
+      return [
+        [xCenter, yCenter],
+        [xCenter + 1, yCenter + 1],
+        [xCenter, yCenter + 1],
+        [xCenter + 1, yCenter],
+      ];
+    case "s":
+      return [
+        [xCenter, yCenter],
+        [xCenter, yCenter + 1],
+        [xCenter + 1, yCenter + 1],
+        [xCenter + 1, yCenter + 2],
+      ];
+    case "t":
+      return [
+        [xCenter, yCenter],
+        [xCenter, yCenter + 1],
+        [xCenter, yCenter + 2],
+        [xCenter + 1, yCenter + 1],
+      ];
+    case "z":
+      return [
+        [xCenter, yCenter + 2],
+        [xCenter, yCenter + 1],
+        [xCenter + 1, yCenter],
+        [xCenter + 1, yCenter + 1],
+      ];
+
+    default:
+      throw new Error(`invalid type ${blockName}`);
+  }
 };
